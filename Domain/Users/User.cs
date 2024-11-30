@@ -19,7 +19,7 @@ public class User : BaseEntity
 
     public static User Create(string username, string email, string password)
     {
-        if (string.IsNullOrWhiteSpace(username) && username.Length < 3)
+        if (string.IsNullOrWhiteSpace(username) && username.Length < 2)
         {
             throw new ArgumentNullException("username");
         }
