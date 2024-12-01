@@ -8,6 +8,7 @@ public static class DependencyInjection
     // var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Picgram.db");
     services.AddDbContext<PicgramDbContext>(options => options.UseSqlite($"Data Source=Picgram.db"));
     services.AddScoped<IUserRepository, UserRepository>();
+    services.AddScoped<UnitOfWork>();
     return services;
   }
 }

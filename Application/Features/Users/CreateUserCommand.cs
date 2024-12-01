@@ -13,11 +13,11 @@ public class CreateUserCommand : IRequest<CreateUserCommandResponse>
 
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserCommandResponse>
     {
-        private readonly IUserRepository userRepository;
+        private readonly UnitOfWork unitOfWork;
 
-        public CreateUserCommandHandler(IUserRepository userRepository)
+        public CreateUserCommandHandler(UnitOfWork unitOfWork)
         {
-            this.userRepository = userRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public Task<CreateUserCommandResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -25,7 +25,7 @@ public class CreateUserCommand : IRequest<CreateUserCommandResponse>
             if (!request.Validation())
                 throw new ArgumentException("Invalid request");
             var user = User.Create(request.Username, request.Email, request.Password);
-            var dbUser = userRepository.Add(user);
+            var dbUser = unitOfWork.UserRepository.Add(user);
             var response = new CreateUserCommandResponse(dbUser.Username, "User created successfully");
             return Task.FromResult(response);
         }
