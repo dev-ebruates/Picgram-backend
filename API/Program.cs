@@ -1,3 +1,6 @@
+using Infrastructure.Contexts;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
@@ -6,6 +9,9 @@ builder.Services
 .AddOpenApi();
 
 var app = builder.Build();
+
+app.Services.CreateScope().ServiceProvider.GetRequiredService<PicgramDbContext>().Database.Migrate();
+
 
 if (app.Environment.IsDevelopment())
 {

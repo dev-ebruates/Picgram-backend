@@ -20,15 +20,22 @@ public class CreateUserCommand : IRequest<CreateUserCommandResponse>
             this.unitOfWork = unitOfWork;
         }
 
-        public Task<CreateUserCommandResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<CreateUserCommandResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            if (!request.Validation())
-                throw new ArgumentException("Invalid request");
-            var user = User.Create(request.Username, request.Email, request.Password);
-            var dbUser = unitOfWork.UserRepository.Add(user);
-            unitOfWork.SaveChanges(cancellationToken);
-            var response = new CreateUserCommandResponse(dbUser.Username, "User created successfully");
-            return Task.FromResult(response);
+            try
+            {
+                if (!request.Validation())
+                    throw new ArgumentException("Invalid request");
+                var user = User.Create(request.Username, request.Email, request.Password);
+                var dbUser = unitOfWork.UserRepository.Add(user);
+                await unitOfWork.SaveChanges(cancellationToken);
+                var response = new CreateUserCommandResponse(dbUser.Username, "User created successfully");
+                return response;
+            }
+            catch (Exception)
+            {
+                return new CreateUserCommandResponse(string.Empty, "Is username or email already in use?");
+            }
         }
     }
 }
@@ -41,7 +48,7 @@ public class CreateUserCommandResponse
         Message = message;
     }
 
-    public string Username { get; set;} = null!;
+    public string Username { get; set; } = null!;
     public string Message { get; set; } = null!;
 }
 
