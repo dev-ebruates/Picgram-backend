@@ -26,6 +26,7 @@ public class CreateUserCommand : IRequest<CreateUserCommandResponse>
                 throw new ArgumentException("Invalid request");
             var user = User.Create(request.Username, request.Email, request.Password);
             var dbUser = unitOfWork.UserRepository.Add(user);
+            unitOfWork.SaveChanges(cancellationToken);
             var response = new CreateUserCommandResponse(dbUser.Username, "User created successfully");
             return Task.FromResult(response);
         }
