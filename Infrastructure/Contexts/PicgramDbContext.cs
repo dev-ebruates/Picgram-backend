@@ -9,6 +9,21 @@ public class PicgramDbContext : DbContext
 
   public DbSet<User> Users { get; private set; }
 
+  public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+  {
+    foreach (var entry in ChangeTracker.Entries())
+    {
+      if (entry.State == EntityState.Added)
+        if (entry.Entity is BaseEntity entityAdded)
+          entityAdded.Created();
+      else if (entry.State == EntityState.Modified)
+        if (entry.Entity is BaseEntity entityModified)
+          entityModified.Updated();
+    }
+
+    return base.SaveChangesAsync(cancellationToken);
+  }
+
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     modelBuilder.Entity<User>(entity =>

@@ -401,3 +401,4 @@ FodyWeavers.xsd
 # My Ignore List
 API/Picgram.db
 .vscode/launch.json
+API/Picgram.db-wal

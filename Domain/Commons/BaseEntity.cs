@@ -10,7 +10,21 @@ public abstract class BaseEntity
     public BaseEntity Delete()
     {
         IsDeleted = true;
-        
+
+        return this;
+    }
+
+    public BaseEntity Created()
+    {
+        CreatedAt = DateTime.UtcNow;
+
+        return this;
+    }
+
+    public BaseEntity Updated()
+    {
+        UpdatedAt = DateTime.UtcNow;
+
         return this;
     }
 }
