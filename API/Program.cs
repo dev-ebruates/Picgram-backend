@@ -3,6 +3,16 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin() // Tüm kaynaklara izin ver
+              .AllowAnyHeader() // Tüm başlıklara izin ver
+              .AllowAnyMethod(); // Tüm HTTP metodlarına izin ver
+    });
+});
+
 builder.Services
 .AddApplication()
 .AddInfrastructure()
@@ -19,8 +29,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 
-app.MapGet("/users/create", ([FromBody] CreateUserCommand request, [FromServices] IMediator mediator) =>
+app.MapPost("/users", ([FromBody] CreateUserCommand request, [FromServices] IMediator mediator) =>
 {
     return mediator.Send(request);
 })

@@ -402,3 +402,5 @@ FodyWeavers.xsd
 API/Picgram.db
 .vscode/launch.json
 API/Picgram.db-wal
+API/Picgram.db-shm
+API/Picgram.db-wal
