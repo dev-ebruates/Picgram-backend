@@ -1,6 +1,8 @@
-﻿namespace Application.Features.Users;
+﻿using Application.Commons;
 
-public class CreateUserCommand : IRequest<CreateUserCommandResponse>
+namespace Application.Features.Users;
+
+public class CreateUserCommand : IRequest<Response<CreateUserCommandResponse>>
 {
     public string Username { get; set; } = null!;
     public string Email { get; set; } = null!;
@@ -11,7 +13,7 @@ public class CreateUserCommand : IRequest<CreateUserCommandResponse>
         return Password != null && Password.Length > 3 && Username != null && Username.Length > 1 && Email != null && Email.Length > 0 && Email.Contains("@");
     }
 
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserCommandResponse>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Response<CreateUserCommandResponse>>
     {
         private readonly UnitOfWork unitOfWork;
 
@@ -20,7 +22,7 @@ public class CreateUserCommand : IRequest<CreateUserCommandResponse>
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<CreateUserCommandResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<Response<CreateUserCommandResponse>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -29,12 +31,12 @@ public class CreateUserCommand : IRequest<CreateUserCommandResponse>
                 var user = User.Create(request.Username, request.Email, request.Password);
                 var dbUser = unitOfWork.UserRepository.Add(user);
                 await unitOfWork.SaveChanges(cancellationToken);
-                var response = new CreateUserCommandResponse(dbUser.Username, "User created successfully");
-                return response;
+                var response = new CreateUserCommandResponse(dbUser.Username);
+                return Response<CreateUserCommandResponse>.CreateSuccessResponse(response, "User created successfully");
             }
             catch (Exception)
             {
-                return new CreateUserCommandResponse(string.Empty, "Is username or email already in use?");
+                return Response<CreateUserCommandResponse>.CreateErrorResponse("Is username or email already in use?");
             }
         }
     }
@@ -42,13 +44,11 @@ public class CreateUserCommand : IRequest<CreateUserCommandResponse>
 
 public class CreateUserCommandResponse
 {
-    public CreateUserCommandResponse(string username, string message)
+    public CreateUserCommandResponse(string username)
     {
         Username = username;
-        Message = message;
     }
 
     public string Username { get; set; } = null!;
-    public string Message { get; set; } = null!;
 }
 
