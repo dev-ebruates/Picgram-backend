@@ -1,6 +1,4 @@
-﻿using Application.Commons;
-
-namespace Application.Features.Users;
+﻿namespace Application.Features.Users;
 
 public class CreateUserCommand : IRequest<Response<CreateUserCommandResponse>>
 {

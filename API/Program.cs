@@ -1,5 +1,4 @@
-using Infrastructure.Contexts;
-using Microsoft.EntityFrameworkCore;
+using Application.Features.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,5 +35,12 @@ app.MapPost("/users", ([FromBody] CreateUserCommand request, [FromServices] IMed
     return mediator.Send(request);
 })
 .WithName("CreateUser");
+
+app.MapPost("/auth", ([FromBody] AuthCommand request, [FromServices] IMediator mediator) =>
+{
+    return mediator.Send(request);
+})
+.WithName("Auth");
+
 
 app.Run();
