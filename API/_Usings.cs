@@ -6,3 +6,7 @@ global using Microsoft.AspNetCore.Mvc;
 global using Infrastructure.Repositories;
 global using Infrastructure.Contexts;
 global using Microsoft.EntityFrameworkCore;
+global using System.Text;
+global using Application.Features.Auth;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.IdentityModel.Tokens;

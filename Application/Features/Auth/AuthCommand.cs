@@ -9,10 +9,12 @@ public class AuthCommand : IRequest<Response<AuthCommandResponse>>
   public class AuthCommandHandler : IRequestHandler<AuthCommand, Response<AuthCommandResponse>>
   {
     private readonly UnitOfWork unitOfWork;
+    private readonly JwtTokenService jwtTokenService;
 
-    public AuthCommandHandler(UnitOfWork unitOfWork)
+    public AuthCommandHandler(UnitOfWork unitOfWork, JwtTokenService jwtTokenService)
     {
       this.unitOfWork = unitOfWork;
+      this.jwtTokenService = jwtTokenService;
     }
 
     public async Task<Response<AuthCommandResponse>> Handle(AuthCommand request, CancellationToken cancellationToken)
@@ -22,7 +24,8 @@ public class AuthCommand : IRequest<Response<AuthCommandResponse>>
         return Response<AuthCommandResponse>.CreateErrorResponse("User not found");
       if (user.Password != request.Password)
         return Response<AuthCommandResponse>.CreateErrorResponse("Invalid password");
-      return Response<AuthCommandResponse>.CreateSuccessResponse(new AuthCommandResponse("tokın"), "User authenticated successfully");
+      var token = jwtTokenService.GenerateToken(user);
+      return Response<AuthCommandResponse>.CreateSuccessResponse(new AuthCommandResponse(token), "User authenticated successfully");
     }
   }
 }
