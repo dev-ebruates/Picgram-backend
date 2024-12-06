@@ -53,16 +53,12 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapPost("/users", ([FromBody] CreateUserCommand request, [FromServices] IMediator mediator) =>
-{
-    return mediator.Send(request);
-})
+app.MapPost("/users",
+    ([FromBody] CreateUserCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
 .WithName("CreateUser");
 
-app.MapPost("/auth", ([FromBody] AuthCommand request, [FromServices] IMediator mediator) =>
-{
-    return mediator.Send(request);
-})
+app.MapPost("/auth",
+    ([FromBody] AuthCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
 .WithName("Auth");
 
 app.Run();
