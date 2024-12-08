@@ -1,4 +1,5 @@
-﻿namespace Infrastructure.Repositories;
+﻿
+namespace Infrastructure.Repositories;
 
 public class PostRepository : IPostRepository
 {
@@ -13,5 +14,10 @@ public class PostRepository : IPostRepository
   {
     context.Posts.Add(post);
     return post;
+  }
+
+  public Task<List<Post>> GetAll()
+  {
+    return context.Posts.Include(x => x.User).ToListAsync();
   }
 }

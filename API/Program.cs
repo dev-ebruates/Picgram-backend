@@ -67,4 +67,9 @@ app.MapPost("/posts",
 .WithName("CreatePost")
 .RequireAuthorization();
 
+app.MapGet("/posts",
+    ([FromServices] IMediator mediator) => mediator.Send(new GetAllPostCommand()))
+.WithName("GetAllPost")
+.RequireAuthorization();
+
 app.Run();

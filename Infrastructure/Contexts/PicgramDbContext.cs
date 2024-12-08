@@ -36,6 +36,7 @@ public class PicgramDbContext : DbContext
       entity.Property(x => x.Username).IsRequired().HasMaxLength(255);
       entity.HasIndex(x => x.Username).IsUnique();
       entity.HasIndex(x => x.Email).IsUnique();
+      entity.HasQueryFilter(e => !e.IsDeleted);
     });
 
      modelBuilder.Entity<Post>(entity =>
@@ -44,6 +45,7 @@ public class PicgramDbContext : DbContext
       entity.Property(x => x.Id).ValueGeneratedOnAdd();
       entity.Property(x => x.MediaUrl).IsRequired();
       entity.Property(x => x.Caption).HasMaxLength(5000);
+      entity.HasQueryFilter(e => !e.IsDeleted);
     });
   }
 }
