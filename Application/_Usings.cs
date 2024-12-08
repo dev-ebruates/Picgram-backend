@@ -9,3 +9,4 @@ global using System.Text;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.IdentityModel.Tokens;
 global using Application.Services;
+global using Domain.Posts;

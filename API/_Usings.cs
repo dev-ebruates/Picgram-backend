@@ -10,3 +10,4 @@ global using System.Text;
 global using Application.Features.Auth;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.IdentityModel.Tokens;
+global using Application.Features.Posts;

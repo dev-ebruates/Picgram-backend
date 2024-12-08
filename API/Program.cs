@@ -38,6 +38,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -60,5 +61,10 @@ app.MapPost("/users",
 app.MapPost("/auth",
     ([FromBody] AuthCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
 .WithName("Auth");
+
+app.MapPost("/posts",
+    ([FromBody] CreatePostCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
+.WithName("CreatePost")
+.RequireAuthorization();
 
 app.Run();
