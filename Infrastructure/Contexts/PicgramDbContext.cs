@@ -8,6 +8,7 @@ public class PicgramDbContext : DbContext
   }
 
   public DbSet<User> Users { get; private set; }
+  public DbSet<Post> Posts { get; private set; }
 
   public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
   {
@@ -35,6 +36,14 @@ public class PicgramDbContext : DbContext
       entity.Property(x => x.Username).IsRequired().HasMaxLength(255);
       entity.HasIndex(x => x.Username).IsUnique();
       entity.HasIndex(x => x.Email).IsUnique();
+    });
+
+     modelBuilder.Entity<Post>(entity =>
+    {
+      entity.HasKey(e => e.Id);
+      entity.Property(x => x.Id).ValueGeneratedOnAdd();
+      entity.Property(x => x.MediaUrl).IsRequired();
+      entity.Property(x => x.Caption).HasMaxLength(5000);
     });
   }
 }
