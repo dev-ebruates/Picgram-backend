@@ -31,6 +31,7 @@ public class GetUserAllPostCommand : IRequest<Response<List<GetUserAllPostComman
         var postResponses = userPosts.Select(post => new GetUserAllPostCommandResponse(
           post.Id,
           post.User.Username,
+          post.User.Bio,
           post.User.ProfilePicture,
           post.MediaUrl,
           post.Caption,
@@ -51,19 +52,22 @@ public class GetUserAllPostCommandResponse
 {
   public Guid Id { get; set; }
   public string Username { get; set; } = null!;
+  public string Bio { get; set; } = null!;
   public string? UserProfilePicture { get; set; }
   public string MediaUrl { get; set; } = null!;
   public string? Caption { get; set; }
   public DateTime CreatedAt { get; set; }
 
-  public GetUserAllPostCommandResponse(Guid id, string username, string userProfilePicture, string mediaUrl, string? caption, DateTime createdAt)
+  public GetUserAllPostCommandResponse(Guid id, string username, string bio, string userProfilePicture, string mediaUrl, string? caption, DateTime createdAt)
   {
     Id = id;
     Username = username;
+    Bio = bio;
     UserProfilePicture = userProfilePicture;
     MediaUrl = mediaUrl;
     Caption = caption;
     CreatedAt = createdAt;
+
   }
 }
 
