@@ -72,4 +72,9 @@ app.MapGet("/posts",
 .WithName("GetAllPost")
 .RequireAuthorization();
 
+app.MapGet("/user-posts",
+    ([FromServices] IMediator mediator) => mediator.Send(new GetUserAllPostCommand()))
+.WithName("GetUserAllPost")
+.RequireAuthorization();
+
 app.Run();

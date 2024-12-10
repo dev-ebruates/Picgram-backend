@@ -1,5 +1,4 @@
-﻿
-namespace Infrastructure.Repositories;
+﻿namespace Infrastructure.Repositories;
 
 public class PostRepository : IPostRepository
 {
@@ -20,4 +19,9 @@ public class PostRepository : IPostRepository
   {
     return context.Posts.Include(x => x.User).ToListAsync();
   }
+
+    public Task<List<Post>> GetAllByUserId(Guid userId)
+    {
+        return context.Posts.Include(x => x.User).Where(x => x.UserId == userId).ToListAsync();
+    }
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Application.Features.Posts;
+﻿namespace Application.Features.Posts;
 
 public class CreatePostCommand : IRequest<Response<CreatePostCommandResponse>>
 {

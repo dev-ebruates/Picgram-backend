@@ -10,3 +10,4 @@ global using Microsoft.Extensions.Configuration;
 global using Microsoft.IdentityModel.Tokens;
 global using Application.Services;
 global using Domain.Posts;
+global using Microsoft.AspNetCore.Http;
