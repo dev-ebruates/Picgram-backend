@@ -77,4 +77,9 @@ app.MapGet("/user-posts",
 .WithName("GetUserAllPost")
 .RequireAuthorization();
 
+app.MapPost("/user-bio",
+    ([FromBody] UpdateUserBioCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
+.WithName("UpdateUserBio")
+.RequireAuthorization();
+
 app.Run();

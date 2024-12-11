@@ -1,4 +1,5 @@
-﻿namespace Infrastructure.Repositories;
+﻿
+namespace Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {
@@ -13,6 +14,11 @@ public class UserRepository : IUserRepository
   {
     context.Users.Add(user);
     return user;
+  }
+
+  public Task<User?> Get(Guid id)
+  {
+    return context.Users.FirstOrDefaultAsync(x => x.Id == id);
   }
 
   public Task<User?> GetByEmailOrUsername(string emailOrUsername)
