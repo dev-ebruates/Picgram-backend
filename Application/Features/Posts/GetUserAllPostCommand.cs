@@ -52,13 +52,13 @@ public class GetUserAllPostCommandResponse
 {
   public Guid Id { get; set; }
   public string Username { get; set; } = null!;
-  public string Bio { get; set; } = null!;
+  public string? Bio { get; set; } = null!;
   public string? UserProfilePicture { get; set; }
   public string MediaUrl { get; set; } = null!;
   public string? Caption { get; set; }
   public DateTime CreatedAt { get; set; }
 
-  public GetUserAllPostCommandResponse(Guid id, string username, string bio, string userProfilePicture, string mediaUrl, string? caption, DateTime createdAt)
+  public GetUserAllPostCommandResponse(Guid id, string username, string? bio, string? userProfilePicture, string mediaUrl, string? caption, DateTime createdAt)
   {
     Id = id;
     Username = username;

@@ -38,7 +38,7 @@ public class GetAllPostCommandResponse
   public string? Caption { get; set; }
   public DateTime CreatedAt { get; set; }
 
-  public GetAllPostCommandResponse(Guid id, string username, string userProfilePicture, string mediaUrl, string? caption, DateTime createdAt)
+  public GetAllPostCommandResponse(Guid id, string username, string? userProfilePicture, string mediaUrl, string? caption, DateTime createdAt)
   {
     Id = id;
     Username = username;
