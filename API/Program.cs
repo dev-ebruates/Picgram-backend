@@ -82,4 +82,9 @@ app.MapPost("/user-bio",
 .WithName("UpdateUserBio")
 .RequireAuthorization();
 
+app.MapPost("/stories",
+    ([FromBody] CreateStoryCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
+.WithName("CreateStory")
+.RequireAuthorization();
+
 app.Run();
