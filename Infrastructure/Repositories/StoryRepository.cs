@@ -14,8 +14,11 @@ public class StoryRepository : IStoryRepository
     return story;
   }
 
-  public Task<List<Story>> GetAll()
+  public Task<List<Story>> GetAllLatest()
   {
-    return context.Stories.Include(x => x.User).ToListAsync();
+    return context.Stories
+    .Where(x => x.CreatedAt >= DateTime.UtcNow.AddDays(-1))
+    .Include(x => x.User)
+    .ToListAsync();
   }
 }

@@ -1,11 +1,10 @@
-﻿
-namespace Application.Features.Posts;
+﻿namespace Application.Features.Posts;
 
 public class GetAllPostCommand : IRequest<Response<List<GetAllPostCommandResponse>>>
 {
   public class GetAllPostCommandHandler : IRequestHandler<GetAllPostCommand, Response<List<GetAllPostCommandResponse>>>
   {
-    readonly UnitOfWork unitOfWork;
+    private readonly UnitOfWork unitOfWork;
 
     public GetAllPostCommandHandler(UnitOfWork unitOfWork)
     {
@@ -32,9 +31,9 @@ public class GetAllPostCommand : IRequest<Response<List<GetAllPostCommandRespons
 public class GetAllPostCommandResponse
 {
   public Guid Id { get; set; }
-  public string Username { get; set; } = null!;
+  public string Username { get; set; }
   public string? UserProfilePicture { get; set; }
-  public string MediaUrl { get; set; } = null!;
+  public string MediaUrl { get; set; }
   public string? Caption { get; set; }
   public DateTime CreatedAt { get; set; }
 
