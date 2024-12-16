@@ -87,7 +87,7 @@ app.MapPost("/stories",
 .WithName("CreateStory")
 .RequireAuthorization();
 
-app.MapGet("/latest-stories",
+app.MapGet("/stories/latest",
     ([FromServices] IMediator mediator) => mediator.Send(new GetAllLatestStoryCommand()))
 .WithName("GetAllLatestStory")
 .RequireAuthorization();
