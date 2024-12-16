@@ -21,4 +21,12 @@ public class StoryRepository : IStoryRepository
     .Include(x => x.User)
     .ToListAsync();
   }
+
+  public Task<List<Story>> GetAllLatestByUsername(string username)
+  {
+    return context.Stories
+    .Include(x => x.User)
+    .Where(x => x.CreatedAt >= DateTime.UtcNow.AddDays(-1) && x.User.Username == username)
+    .ToListAsync();
+  }
 }
