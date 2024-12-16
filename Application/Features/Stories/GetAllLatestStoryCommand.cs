@@ -20,7 +20,8 @@ public class GetAllLatestStoryCommand : IRequest<Response<List<GetAllLatestStory
           return Response<List<GetAllLatestStoryCommandResponse>>.CreateSuccessResponse(new List<GetAllLatestStoryCommandResponse>(0), "No stories found");
         var storyResponses = latestStories
         .GroupBy(s => new { s.User.Username, s.User.ProfilePicture })
-        .Select(group => new GetAllLatestStoryCommandResponse(group.Key.Username, group.Key.ProfilePicture, group.Select(s => new StoryDto(s.Id, s.MediaUrl, s.CreatedAt)).ToList())).ToList();
+        .Select(group => new GetAllLatestStoryCommandResponse(group.Key.Username, group.Key.ProfilePicture))
+        .ToList();
 
         return Response<List<GetAllLatestStoryCommandResponse>>.CreateSuccessResponse(storyResponses);
       }
@@ -36,26 +37,10 @@ public class GetAllLatestStoryCommandResponse
 {
   public string Username { get; set; }
   public string? UserProfilePicture { get; set; }
-  public List<StoryDto> Stories { get; set; }
 
-  public GetAllLatestStoryCommandResponse(string username, string? userProfilePicture, List<StoryDto> stories)
+  public GetAllLatestStoryCommandResponse(string username, string? userProfilePicture)
   {
     Username = username;
     UserProfilePicture = userProfilePicture;
-    Stories = stories;
-  }
-}
-
-public class StoryDto
-{
-  public Guid Id { get; set; }
-  public string MediaUrl { get; set; }
-  public DateTime CreatedAt { get; set; }
-
-  public StoryDto(Guid id, string mediaUrl, DateTime createdAt)
-  {
-    Id = id;
-    MediaUrl = mediaUrl;
-    CreatedAt = createdAt;
   }
 }
