@@ -58,6 +58,11 @@ app.MapPost("/users",
     ([FromBody] CreateUserCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
 .WithName("CreateUser");
 
+app.MapGet("/my-profile",
+    ([FromServices] IMediator mediator) => mediator.Send(new GetMyProfileCommand()))
+.WithName("GetMyProfile")
+.RequireAuthorization();
+
 app.MapPost("/auth",
     ([FromBody] AuthCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
 .WithName("Auth");
