@@ -6,5 +6,5 @@ public interface IUserRepository
   public Task<User?> GetByEmailOrUsername(string emailOrUsername);
   public Task<User?> Get(Guid id);
 
-  public Task<List<(Guid Id, string Username)>> GetAllSearch(string searchParameter);
+  public Task<List<(Guid Id, string Username, string? ProfilePicture)>> GetAllSearch(string searchParameter);
 }
