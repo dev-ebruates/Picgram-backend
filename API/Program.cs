@@ -1,3 +1,5 @@
+using Application.Features.Search;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -98,8 +100,13 @@ app.MapGet("/stories/latest",
 .RequireAuthorization();
 
 app.MapGet("/stories/{username}",
-    ([FromRoute] string username, [FromServices] IMediator mediator) => mediator.Send(new GetAllLatestStoryByUserCommand{ Username = username }))
+    ([FromRoute] string username, [FromServices] IMediator mediator) => mediator.Send(new GetAllLatestStoryByUserCommand { Username = username }))
 .WithName("GetAllLatestStoryByUser")
+.RequireAuthorization();
+
+app.MapGet("/search/{searchParameter}",
+    ([FromRoute] string searchParameter, [FromServices] IMediator mediator) => mediator.Send(new GetSearchCommand(){ searchParameter = searchParameter }))
+.WithName("GetSearch")
 .RequireAuthorization();
 
 app.Run();

@@ -25,4 +25,13 @@ public class UserRepository : IUserRepository
   {
     return context.Users.FirstOrDefaultAsync(x => x.Email == emailOrUsername || x.Username == emailOrUsername);
   }
+  
+  public async Task<List<(Guid Id, string Username)>> GetAllSearch(string searchParameter){
+    var users = await context.Users
+    .Where(x => x.Username.Contains(searchParameter) || x.Email.Contains(searchParameter))
+    .Select(x => new { x.Id, x.Username })
+    .ToListAsync();
+
+    return users.Select(x => (x.Id, x.Username)).ToList();
+  }
 }
