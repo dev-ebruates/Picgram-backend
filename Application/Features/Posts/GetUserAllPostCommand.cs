@@ -2,6 +2,7 @@
 
 public class GetUserAllPostCommand : IRequest<Response<List<GetUserAllPostCommandResponse>>>
 {
+  public string Username { get; set; } = null!;
 
   public GetUserAllPostCommand()
   {
@@ -10,28 +11,23 @@ public class GetUserAllPostCommand : IRequest<Response<List<GetUserAllPostComman
   public class GetUserAllPostCommandHandler : IRequestHandler<GetUserAllPostCommand, Response<List<GetUserAllPostCommandResponse>>>
   {
     readonly UnitOfWork unitOfWork;
-    private readonly IHttpContextAccessor httpContextAccessor;
 
-    public GetUserAllPostCommandHandler(UnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+    public GetUserAllPostCommandHandler(UnitOfWork unitOfWork)
     {
       this.unitOfWork = unitOfWork;
-      this.httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<Response<List<GetUserAllPostCommandResponse>>> Handle(GetUserAllPostCommand request, CancellationToken cancellationToken)
     {
       try
       {
-        var userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)
-       ?? throw new Exception("User not found");
-        var userPosts = await unitOfWork.PostRepository.GetAllByUserId(Guid.Parse(userId));
+        var userPosts = await unitOfWork.PostRepository.GetAllByUsername(request.Username);
         if (userPosts == null || userPosts.Count == 0)
           return Response<List<GetUserAllPostCommandResponse>>.CreateSuccessResponse(new List<GetUserAllPostCommandResponse>(0), "No posts found for the user");
 
         var postResponses = userPosts.Select(post => new GetUserAllPostCommandResponse(
           post.Id,
           post.User.Username,
-          post.User.Bio,
           post.User.ProfilePicture,
           post.MediaUrl,
           post.Caption,
@@ -52,17 +48,15 @@ public class GetUserAllPostCommandResponse
 {
   public Guid Id { get; set; }
   public string Username { get; set; } = null!;
-  public string? Bio { get; set; } = null!;
   public string? UserProfilePicture { get; set; }
   public string MediaUrl { get; set; } = null!;
   public string? Caption { get; set; }
   public DateTime CreatedAt { get; set; }
 
-  public GetUserAllPostCommandResponse(Guid id, string username, string? bio, string? userProfilePicture, string mediaUrl, string? caption, DateTime createdAt)
+  public GetUserAllPostCommandResponse(Guid id, string username, string? userProfilePicture, string mediaUrl, string? caption, DateTime createdAt)
   {
     Id = id;
     Username = username;
-    Bio = bio;
     UserProfilePicture = userProfilePicture;
     MediaUrl = mediaUrl;
     Caption = caption;

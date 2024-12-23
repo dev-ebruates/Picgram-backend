@@ -24,4 +24,8 @@ public class PostRepository : IPostRepository
     {
         return context.Posts.Include(x => x.User).Where(x => x.UserId == userId).ToListAsync();
     }
+    public Task<List<Post>> GetAllByUsername(string username){
+        return context.Posts.Include(x => x.User).Where(x => x.User.Username == username).ToListAsync();
+    }
+
 }
