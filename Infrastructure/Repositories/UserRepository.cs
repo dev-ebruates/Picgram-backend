@@ -34,4 +34,9 @@ public class UserRepository : IUserRepository
 
     return users.Select(x => (x.Id, x.Username, x.ProfilePicture)).ToList();
   }
+
+    public Task<User?> GetByUsername(string username)
+    {
+         return context.Users.FirstOrDefaultAsync(x => x.Username == username);
+    }
 }
