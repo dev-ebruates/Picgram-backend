@@ -63,7 +63,8 @@ app.MapPost("/users",
 
 app.MapGet("/my-profile",
     ([FromServices] IMediator mediator) => mediator.Send(new GetMyProfileCommand()))
-.WithName("GetMyProfile");
+.WithName("GetMyProfile")
+.RequireAuthorization();
 
 
 app.MapGet("/profile/{username}",
