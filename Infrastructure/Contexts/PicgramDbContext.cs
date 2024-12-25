@@ -46,6 +46,7 @@ public class PicgramDbContext : DbContext
      entity.Property(x => x.Id).ValueGeneratedOnAdd();
      entity.Property(x => x.MediaUrl).IsRequired();
      entity.Property(x => x.Caption).HasMaxLength(5000);
+     entity.Ignore(x => x.LikeCount);
      entity.HasQueryFilter(e => !e.IsDeleted);
    });
 
@@ -55,6 +56,17 @@ public class PicgramDbContext : DbContext
       entity.Property(x => x.Id).ValueGeneratedOnAdd();
       entity.Property(x => x.MediaUrl).IsRequired();
       entity.HasQueryFilter(e => !e.IsDeleted);
+    });
+
+    modelBuilder.Entity<PostLike>(entity =>
+    {
+      entity.HasKey(e => new { e.PostId, e.UserId });
+      entity.HasOne(e => e.Post)
+        .WithMany(e => e.Likes)
+        .HasForeignKey(e => e.PostId);
+      entity.HasOne(e => e.User)
+        .WithMany(e => e.PostLikes)
+        .HasForeignKey(e => e.UserId);
     });
   }
 }

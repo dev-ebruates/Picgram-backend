@@ -116,4 +116,9 @@ app.MapGet("/search/{searchParameter}",
 .WithName("GetSearch")
 .RequireAuthorization();
 
+app.MapPut("/posts/{id}/like",
+    ([FromRoute] string id, [FromServices] IMediator mediator) => mediator.Send(new LikePostCommand { PostId = Guid.Parse(id) }))
+.WithName("LikePost")
+.RequireAuthorization();
+
 app.Run();

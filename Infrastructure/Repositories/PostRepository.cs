@@ -15,7 +15,15 @@ public class PostRepository : IPostRepository
     return post;
   }
 
-  public Task<List<Post>> GetAll()
+    public Task<Post?> Get(Guid id)
+    {
+      return context.Posts
+      .Include(x => x.Likes)
+      .Where(post => post.Id == id)
+      .FirstOrDefaultAsync();
+    }
+
+    public Task<List<Post>> GetAll()
   {
     return context.Posts.Include(x => x.User).ToListAsync();
   }
