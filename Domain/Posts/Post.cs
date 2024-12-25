@@ -49,5 +49,10 @@ public class Post : BaseEntity
         
         return this;
     }
+
+    public bool IsLiked(Guid userId)
+    {
+        return Likes.Any(x => x.UserId == userId);
+    }
 }
 

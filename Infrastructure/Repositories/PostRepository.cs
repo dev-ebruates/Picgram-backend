@@ -25,7 +25,10 @@ public class PostRepository : IPostRepository
 
     public Task<List<Post>> GetAll()
   {
-    return context.Posts.Include(x => x.User).ToListAsync();
+    return context.Posts
+    .Include(x => x.User)
+    .Include(x => x.Likes)
+    .ToListAsync();
   }
 
     public Task<List<Post>> GetAllByUserId(Guid userId)
