@@ -7,6 +7,7 @@ public class Post : BaseEntity
     public string MediaUrl { get; private set; }
     public string? Caption { get; private set; }
     public List<PostLike> Likes { get; private set; }
+    public List<PostComment> Comments { get; private set; }
     public int LikeCount => Likes.Count;
 
     private Post(string mediaUrl, string? caption, Guid userId)
@@ -15,6 +16,7 @@ public class Post : BaseEntity
         Caption = caption;
         UserId = userId;
         Likes = [];
+        Comments = [];
     }
 
     public static Post Create(string mediaUrl, string? caption, Guid userId)
@@ -35,7 +37,7 @@ public class Post : BaseEntity
         if (Likes.Any(x => x.UserId == userId))
         {
             var postLike = Likes.FirstOrDefault(x => x.UserId == userId);
-            if(postLike != null)
+            if (postLike != null)
                 Likes.Remove(postLike);
         }
         else
@@ -46,13 +48,18 @@ public class Post : BaseEntity
                 PostId = Id
             });
         }
-        
+
         return this;
     }
 
     public bool IsLiked(Guid userId)
     {
         return Likes.Any(x => x.UserId == userId);
+    }
+    public Post AddComment(PostComment postComment)
+    {
+        Comments.Add(postComment);
+        return this;
     }
 }
 

@@ -64,9 +64,25 @@ public class PicgramDbContext : DbContext
       entity.HasOne(e => e.Post)
         .WithMany(e => e.Likes)
         .HasForeignKey(e => e.PostId);
+        // .IsRequired(false);
       entity.HasOne(e => e.User)
         .WithMany(e => e.PostLikes)
         .HasForeignKey(e => e.UserId);
+        // .IsRequired(false);
+    });
+
+    modelBuilder.Entity<PostComment>(entity =>
+    {
+      entity.HasKey(e => e.Id);
+      entity.HasOne(e => e.Post)
+        .WithMany(e => e.Comments)
+        .HasForeignKey(e => e.PostId);
+        // .IsRequired(false);
+      entity.HasOne(e => e.User)
+        .WithMany(e => e.PostComments)
+        .HasForeignKey(e => e.UserId);
+        // .IsRequired(false);
+      entity.HasQueryFilter(e => !e.IsDeleted);
     });
   }
 }

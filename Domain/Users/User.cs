@@ -11,6 +11,7 @@ public class User : BaseEntity
     public string? Bio { get; private set; }
     public List<Post> Posts { get; private set; }
     public List<PostLike> PostLikes { get; set; }
+    public List<PostComment> PostComments { get; set; }
 
     private User(string username, string email, string password, string profilePicture, string bio)
     {
@@ -21,6 +22,7 @@ public class User : BaseEntity
         Bio = bio;
         Posts = [];
         PostLikes = [];
+        PostComments = [];
     }
 
     public static User Create(string username, string email, string password)

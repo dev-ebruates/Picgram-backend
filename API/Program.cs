@@ -121,4 +121,9 @@ app.MapPut("/posts/{id}/like",
 .WithName("LikePost")
 .RequireAuthorization();
 
+app.MapPost("/posts/comment",
+    ([FromBody] CreatePostCommentCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
+.WithName("PostComment")
+.RequireAuthorization();
+
 app.Run();
