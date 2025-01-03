@@ -22,7 +22,27 @@ public class GetAllPostCommand : IRequest<Response<List<GetAllPostCommandRespons
           return Response<List<GetAllPostCommandResponse>>.CreateSuccessResponse(new List<GetAllPostCommandResponse>(0), "No posts found");
         var userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)
       ?? throw new Exception("User not found");
-        var postResponses = posts.Select(post => new GetAllPostCommandResponse(post.Id, post.User.Username, post.User.ProfilePicture, post.MediaUrl, post.Caption, post.IsLiked(Guid.Parse(userId)), post.LikeCount, post.CreatedAt)).OrderByDescending(x => x.CreatedAt).ToList();
+        var postResponses = posts
+          .Select(post =>
+            new GetAllPostCommandResponse(
+              post.Id,
+              post.User.Username,
+              post.User.ProfilePicture,
+              post.MediaUrl,
+              post.Caption,
+              post.IsLiked(Guid.Parse(userId)),
+              post.LikeCount,
+              post.CreatedAt,
+              post.Comments
+                .Select(comment =>
+                  new GetAllPostCommandResponse.PostCommentResponse(comment.Id,
+                    comment.Comment,
+                    comment.User.Username,
+                    comment.User.ProfilePicture,
+                    comment.CreatedAt))
+                    .ToList()))
+          .OrderByDescending(x => x.CreatedAt)
+          .ToList();
         return Response<List<GetAllPostCommandResponse>>.CreateSuccessResponse(postResponses);
       }
       catch (Exception)
@@ -32,6 +52,7 @@ public class GetAllPostCommand : IRequest<Response<List<GetAllPostCommandRespons
     }
   }
 }
+
 public class GetAllPostCommandResponse
 {
   public Guid Id { get; set; }
@@ -42,8 +63,9 @@ public class GetAllPostCommandResponse
   public bool IsLiked { get; set; }
   public int LikeCount { get; set; }
   public DateTime CreatedAt { get; set; }
+  public List<PostCommentResponse> Comments { get; set; }
 
-  public GetAllPostCommandResponse(Guid id, string username, string? userProfilePicture, string mediaUrl, string? caption, bool isLiked, int likeCount, DateTime createdAt)
+  public GetAllPostCommandResponse(Guid id, string username, string? userProfilePicture, string mediaUrl, string? caption, bool isLiked, int likeCount, DateTime createdAt, List<PostCommentResponse> comments)
   {
     Id = id;
     Username = username;
@@ -53,5 +75,24 @@ public class GetAllPostCommandResponse
     IsLiked = isLiked;
     LikeCount = likeCount;
     CreatedAt = createdAt;
+    Comments = comments;
+  }
+
+  public class PostCommentResponse
+  {
+    public PostCommentResponse(Guid id, string comment, string username, string? profilePicture, DateTime createdAt)
+    {
+      Id = id;
+      Comment = comment;
+      Username = username;
+      ProfilePicture = profilePicture;
+      CreatedAt = createdAt;
+    }
+
+    public Guid Id { get; }
+    public string Comment { get; }
+    public string Username { get; }
+    public string? ProfilePicture { get; }
+    public DateTime CreatedAt { get; }
   }
 }

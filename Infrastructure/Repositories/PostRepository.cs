@@ -29,6 +29,7 @@ public class PostRepository : IPostRepository
     return context.Posts
     .Include(x => x.User)
     .Include(x => x.Likes)
+    .Include(x => x.Comments)
     .ToListAsync();
   }
 

@@ -40,8 +40,5 @@ public class GetProfileCommandResponse
     Username = username;
     UserProfilePicture = userProfilePicture;
     Bio = bio;
-
   }
-
-
 }
