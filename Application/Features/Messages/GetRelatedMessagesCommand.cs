@@ -20,6 +20,7 @@ public class GetRelatedMessagesCommand : IRequest<Response<List<GetRelatedMessag
       var senderUserId = httpUserService.GetUserId();
       var receiverUserId = request.ReceiverUserId;
       var messages = await unitOfWork.MessageRepository.GetRelatedMessages(senderUserId, receiverUserId);
+      messages = messages.OrderBy(x => x.CreatedAt).ToList();
       var response = messages.Select(m => new GetRelatedMessagesCommandResponse(
         m.Sender.Username,
         m.Sender.ProfilePicture,

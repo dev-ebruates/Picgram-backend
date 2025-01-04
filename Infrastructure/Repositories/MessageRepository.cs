@@ -33,7 +33,6 @@ public class MessageRepository : IMessageRepository
       .Where(x =>
         (x.SenderId == primaryUserId && x.ReceiverId == seconderyUserId) ||
         (x.SenderId == seconderyUserId && x.ReceiverId == primaryUserId))
-      .OrderByDescending(x => x.CreatedAt)
       .ToListAsync();
   }
 }
