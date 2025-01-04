@@ -1,11 +1,10 @@
-
 namespace Application.Features.Messages;
 
-public class GetRelatedMessagesCommand : IRequest<List<GetRelatedMessagesCommandResponse>>
+public class GetRelatedMessagesCommand : IRequest<Response<List<GetRelatedMessagesCommandResponse>>>
 {
   public Guid ReceiverUserId { get; set; }
 
-  public class GetRelatedMessagesCommandHandler : IRequestHandler<GetRelatedMessagesCommand, List<GetRelatedMessagesCommandResponse>>
+  public class GetRelatedMessagesCommandHandler : IRequestHandler<GetRelatedMessagesCommand, Response<List<GetRelatedMessagesCommandResponse>>>
   {
     private readonly UnitOfWork unitOfWork;
     private readonly HttpUserService httpUserService;
@@ -16,7 +15,7 @@ public class GetRelatedMessagesCommand : IRequest<List<GetRelatedMessagesCommand
       this.httpUserService = httpUserService;
     }
 
-    public async Task<List<GetRelatedMessagesCommandResponse>> Handle(GetRelatedMessagesCommand request, CancellationToken cancellationToken)
+    public async Task<Response<List<GetRelatedMessagesCommandResponse>>> Handle(GetRelatedMessagesCommand request, CancellationToken cancellationToken)
     {
       var senderUserId = httpUserService.GetUserId();
       var receiverUserId = request.ReceiverUserId;
@@ -28,7 +27,7 @@ public class GetRelatedMessagesCommand : IRequest<List<GetRelatedMessagesCommand
         m.Receiver.ProfilePicture,
         m.Content,
         m.CreatedAt)).ToList();
-      return response;
+      return Response<List<GetRelatedMessagesCommandResponse>>.CreateSuccessResponse(response, "Messages retrieved successfully");
     }
   }
 }
