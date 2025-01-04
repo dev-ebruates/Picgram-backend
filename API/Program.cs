@@ -1,5 +1,3 @@
-using Application.Features.Search;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -124,6 +122,21 @@ app.MapPut("/posts/{id}/like",
 app.MapPost("/posts/comment",
     ([FromBody] CreatePostCommentCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
 .WithName("PostComment")
+.RequireAuthorization();
+
+app.MapPost("/messages",
+    ([FromBody] CreateMessageCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
+.WithName("CreateMessage")
+.RequireAuthorization();
+
+app.MapGet("/conversations",
+    ([FromServices] IMediator mediator) => mediator.Send(new GetConversationsCommand()))
+.WithName("GetConversations")
+.RequireAuthorization();
+
+app.MapGet("/relatedMessages/{senderUserId:guid}",
+    ([FromRoute] Guid senderUserId, [FromServices] IMediator mediator) => mediator.Send(new GetRelatedMessagesCommand { ReceiverUserId = senderUserId }))
+.WithName("GetRelatedMessages")
 .RequireAuthorization();
 
 app.Run();

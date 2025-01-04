@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.Contexts;
+﻿using Domain.Messages;
+
+namespace Infrastructure.Contexts;
 
 public class PicgramDbContext : DbContext
 {
@@ -10,6 +12,7 @@ public class PicgramDbContext : DbContext
   public DbSet<User> Users { get; private set; }
   public DbSet<Post> Posts { get; private set; }
   public DbSet<Story> Stories { get; private set; }
+  public DbSet<Message> Messages { get; private set; }
 
   public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
   {
@@ -64,11 +67,11 @@ public class PicgramDbContext : DbContext
       entity.HasOne(e => e.Post)
         .WithMany(e => e.Likes)
         .HasForeignKey(e => e.PostId);
-        // .IsRequired(false);
+      // .IsRequired(false);
       entity.HasOne(e => e.User)
         .WithMany(e => e.PostLikes)
         .HasForeignKey(e => e.UserId);
-        // .IsRequired(false);
+      // .IsRequired(false);
     });
 
     modelBuilder.Entity<PostComment>(entity =>
@@ -77,12 +80,26 @@ public class PicgramDbContext : DbContext
       entity.HasOne(e => e.Post)
         .WithMany(e => e.Comments)
         .HasForeignKey(e => e.PostId);
-        // .IsRequired(false);
+      // .IsRequired(false);
       entity.HasOne(e => e.User)
         .WithMany(e => e.PostComments)
         .HasForeignKey(e => e.UserId);
-        // .IsRequired(false);
+      // .IsRequired(false);
       entity.HasQueryFilter(e => !e.IsDeleted);
+    });
+
+    modelBuilder.Entity<Message>(entity =>
+    {
+      entity.HasKey(e => e.Id);
+      entity.HasQueryFilter(e => !e.IsDeleted);
+
+      entity.HasOne(m => m.Sender)
+            .WithMany(u => u.SentMessages)
+            .HasForeignKey(m => m.SenderId);
+
+        entity.HasOne(m => m.Receiver)
+            .WithMany(u => u.ReceivedMessages)
+            .HasForeignKey(m => m.ReceiverId);
     });
   }
 }

@@ -13,3 +13,4 @@ global using Domain.Posts;
 global using Microsoft.AspNetCore.Http;
 global using Domain.Stories;
 global using Domain.Commons;
+global using Domain.Messages;

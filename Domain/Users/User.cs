@@ -10,8 +10,12 @@ public class User : BaseEntity
     public string? ProfilePicture { get; private set; }
     public string? Bio { get; private set; }
     public List<Post> Posts { get; private set; }
-    public List<PostLike> PostLikes { get; set; }
-    public List<PostComment> PostComments { get; set; }
+    public List<PostLike> PostLikes { get; private set; }
+    public List<PostComment> PostComments { get; private set; }
+
+    public List<Message> SentMessages { get; set; }
+
+    public List<Message> ReceivedMessages { get; set; }
 
     private User(string username, string email, string password, string profilePicture, string bio)
     {
@@ -23,6 +27,8 @@ public class User : BaseEntity
         Posts = [];
         PostLikes = [];
         PostComments = [];
+        SentMessages = [];
+        ReceivedMessages = [];
     }
 
     public static User Create(string username, string email, string password)
