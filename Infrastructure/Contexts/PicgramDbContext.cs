@@ -1,6 +1,4 @@
-﻿using Domain.Messages;
-
-namespace Infrastructure.Contexts;
+﻿namespace Infrastructure.Contexts;
 
 public class PicgramDbContext : DbContext
 {
@@ -13,6 +11,7 @@ public class PicgramDbContext : DbContext
   public DbSet<Post> Posts { get; private set; }
   public DbSet<Story> Stories { get; private set; }
   public DbSet<Message> Messages { get; private set; }
+  public DbSet<Notification> Notifications { get; private set; }
 
   public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
   {
@@ -100,6 +99,13 @@ public class PicgramDbContext : DbContext
         entity.HasOne(m => m.Receiver)
             .WithMany(u => u.ReceivedMessages)
             .HasForeignKey(m => m.ReceiverId);
+    });
+
+    modelBuilder.Entity<Notification>(entity =>
+    {
+      entity.HasKey(e => e.Id);
+      entity.Property(x => x.Id).ValueGeneratedOnAdd();
+      entity.HasQueryFilter(e => !e.IsDeleted);
     });
   }
 }

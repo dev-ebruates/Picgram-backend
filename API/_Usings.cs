@@ -14,3 +14,4 @@ global using Application.Features.Posts;
 global using Application.Features.Stories;
 global using Application.Features.Messages;
 global using Application.Features.Search;
+global using Application.Features.Notifications;

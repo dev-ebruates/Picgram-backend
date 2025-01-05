@@ -7,12 +7,12 @@ public class LikePostCommand : IRequest<Response<LikePostCommandResponse>>
   public class LikePostCommandHandler : IRequestHandler<LikePostCommand, Response<LikePostCommandResponse>>
   {
     private readonly UnitOfWork unitOfWork;
-    private readonly IHttpContextAccessor httpContextAccessor;
+    private readonly HttpUserService httpUserService;
 
-    public LikePostCommandHandler(UnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+    public LikePostCommandHandler(UnitOfWork unitOfWork, HttpUserService httpUserService)
     {
       this.unitOfWork = unitOfWork;
-      this.httpContextAccessor = httpContextAccessor;
+      this.httpUserService = httpUserService;
     }
 
     public async Task<Response<LikePostCommandResponse>> Handle(LikePostCommand request, CancellationToken cancellationToken)
@@ -20,9 +20,17 @@ public class LikePostCommand : IRequest<Response<LikePostCommandResponse>>
       var post = await unitOfWork.PostRepository.Get(request.PostId);
       if (post == null)
         return Response<LikePostCommandResponse>.CreateErrorResponse("Post not found");
-      var userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)
-        ?? throw new Exception("User not found");
-      post.LikeUnlike(Guid.Parse(userId));
+      var userId = httpUserService.GetUserId();
+      post.LikeUnlike(userId);
+      if (post.IsLiked(userId))
+      {
+        var notification = Notification.LikedNotification(userId, post.UserId, post.Id);
+        unitOfWork.NotificationRepository.Add(notification);
+      }
+      else
+      {
+        await unitOfWork.NotificationRepository.DeleteLikeNotification(userId, post.UserId, post.Id);
+      }
       await unitOfWork.SaveChanges(cancellationToken);
       return Response<LikePostCommandResponse>.CreateSuccessResponse(new LikePostCommandResponse(post.Id, post.LikeCount), "Post liked successfully");
     }

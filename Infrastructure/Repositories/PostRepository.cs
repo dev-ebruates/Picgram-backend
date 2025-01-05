@@ -20,6 +20,7 @@ public class PostRepository : IPostRepository
       return context.Posts
       .Include(x => x.Likes)
       .Include(x => x.Comments)
+      .Include(x => x.User)
       .Where(post => post.Id == id)
       .FirstOrDefaultAsync();
     }

@@ -66,7 +66,7 @@ app.MapGet("/my-profile",
 
 
 app.MapGet("/profile/{username}",
-   ([FromRoute] string username, [FromServices] IMediator mediator) => mediator.Send(new GetProfileCommand(){ username = username }))
+   ([FromRoute] string username, [FromServices] IMediator mediator) => mediator.Send(new GetProfileCommand() { username = username }))
 .WithName("GetProfile")
 .RequireAuthorization();
 
@@ -85,7 +85,7 @@ app.MapGet("/posts",
 .RequireAuthorization();
 
 app.MapGet("/user-posts/{username}",
-    ([FromRoute] string username, [FromServices] IMediator mediator) => mediator.Send(new GetUserAllPostCommand{ Username = username}))
+    ([FromRoute] string username, [FromServices] IMediator mediator) => mediator.Send(new GetUserAllPostCommand { Username = username }))
 .WithName("GetUserAllPost")
 .RequireAuthorization();
 
@@ -110,7 +110,7 @@ app.MapGet("/stories/{username}",
 .RequireAuthorization();
 
 app.MapGet("/search/{searchParameter}",
-    ([FromRoute] string searchParameter, [FromServices] IMediator mediator) => mediator.Send(new GetSearchCommand(){ searchParameter = searchParameter }))
+    ([FromRoute] string searchParameter, [FromServices] IMediator mediator) => mediator.Send(new GetSearchCommand() { searchParameter = searchParameter }))
 .WithName("GetSearch")
 .RequireAuthorization();
 
@@ -137,6 +137,11 @@ app.MapGet("/conversations",
 app.MapGet("/relatedMessages/{senderUserId:guid}",
     ([FromRoute] Guid senderUserId, [FromServices] IMediator mediator) => mediator.Send(new GetRelatedMessagesCommand { ReceiverUserId = senderUserId }))
 .WithName("GetRelatedMessages")
+.RequireAuthorization();
+
+app.MapGet("/notifications",
+    ([FromServices] IMediator mediator) => mediator.Send(new GetAllNotificationByUserIdCommand()))
+.WithName("GetAllNotificationByUserId")
 .RequireAuthorization();
 
 app.Run();

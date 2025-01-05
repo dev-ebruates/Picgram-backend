@@ -33,6 +33,8 @@ public class CreatePostCommentCommand : IRequest<Response<PostCommentCommandResp
           UserId = Guid.Parse(userId)
         };
         post.AddComment(postComment);
+        var notification = Notification.CommentNotification(user.Id, post.UserId, post.Id);
+        unitOfWork.NotificationRepository.Add(notification);
         await unitOfWork.SaveChanges(cancellationToken);
         return Response<PostCommentCommandResponse>.CreateSuccessResponse(new PostCommentCommandResponse(
           postComment.Id,
