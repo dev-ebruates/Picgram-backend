@@ -19,8 +19,9 @@ public class PostRepository : IPostRepository
     {
       return context.Posts
       .Include(x => x.Likes)
-      .Include(x => x.Comments)
       .Include(x => x.User)
+      .Include(x => x.Comments)
+      .ThenInclude(x => x.User)
       .Where(post => post.Id == id)
       .FirstOrDefaultAsync();
     }
@@ -31,6 +32,7 @@ public class PostRepository : IPostRepository
     .Include(x => x.User)
     .Include(x => x.Likes)
     .Include(x => x.Comments)
+    .ThenInclude(x => x.User)
     .ToListAsync();
   }
 
