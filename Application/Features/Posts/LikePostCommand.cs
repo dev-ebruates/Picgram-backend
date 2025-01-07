@@ -8,11 +8,13 @@ public class LikePostCommand : IRequest<Response<LikePostCommandResponse>>
   {
     private readonly UnitOfWork unitOfWork;
     private readonly HttpUserService httpUserService;
+    private readonly SignalRUserService signalRUserService;
 
-    public LikePostCommandHandler(UnitOfWork unitOfWork, HttpUserService httpUserService)
+    public LikePostCommandHandler(UnitOfWork unitOfWork, HttpUserService httpUserService, SignalRUserService signalRUserService)
     {
       this.unitOfWork = unitOfWork;
       this.httpUserService = httpUserService;
+      this.signalRUserService = signalRUserService;
     }
 
     public async Task<Response<LikePostCommandResponse>> Handle(LikePostCommand request, CancellationToken cancellationToken)
@@ -32,6 +34,7 @@ public class LikePostCommand : IRequest<Response<LikePostCommandResponse>>
         await unitOfWork.NotificationRepository.DeleteLikeNotification(userId, post.UserId, post.Id);
       }
       await unitOfWork.SaveChanges(cancellationToken);
+      signalRUserService.SendNotification(post.User.Username, "LikePost");
       return Response<LikePostCommandResponse>.CreateSuccessResponse(new LikePostCommandResponse(post.Id, post.LikeCount), "Post liked successfully");
     }
   }

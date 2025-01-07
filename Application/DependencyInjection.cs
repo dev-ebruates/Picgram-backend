@@ -7,7 +7,8 @@ public static class DependencyInjection
     services
     .AddMediatR(c => c.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly))
     .AddScoped<HttpUserService>()
-    .AddSingleton<JwtTokenService>();
+    .AddSingleton<JwtTokenService>()
+    .AddSingleton<SignalRUserService>();
     
     return services;
   }

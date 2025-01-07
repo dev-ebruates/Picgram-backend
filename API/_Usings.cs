@@ -18,3 +18,4 @@ global using Application.Features.Notifications;
 global using Microsoft.AspNetCore.Authorization;
 global using API.Hubs;
 global using Microsoft.AspNetCore.SignalR;
+global using Application.Services;
