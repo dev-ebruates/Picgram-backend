@@ -15,3 +15,6 @@ global using Application.Features.Stories;
 global using Application.Features.Messages;
 global using Application.Features.Search;
 global using Application.Features.Notifications;
+global using Microsoft.AspNetCore.Authorization;
+global using API.Hubs;
+global using Microsoft.AspNetCore.SignalR;

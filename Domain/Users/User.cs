@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Users;
 
@@ -68,6 +69,8 @@ public class User : BaseEntity
 
 public enum UserRole
 {
+    [Description("User")]
     User = 0,
+    [Description("Admin")]
     Admin
 }

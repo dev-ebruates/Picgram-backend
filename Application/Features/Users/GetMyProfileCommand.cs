@@ -20,7 +20,7 @@ public class GetMyProfileCommand : IRequest<Response<GetMyProfileCommandResponse
       var user = await unitOfWork.UserRepository.Get(Guid.Parse(userId))
         ?? throw new Exception("User not found");
       await unitOfWork.SaveChanges(cancellationToken);
-      return Response<GetMyProfileCommandResponse>.CreateSuccessResponse(new GetMyProfileCommandResponse(user.Username, user.ProfilePicture, user.Bio), "Get user my-profile successfully");
+      return Response<GetMyProfileCommandResponse>.CreateSuccessResponse(new GetMyProfileCommandResponse(user.Username, user.ProfilePicture, user.Bio, user.Role), "Get user my-profile successfully");
     }
   }
 }
@@ -30,11 +30,12 @@ public class GetMyProfileCommandResponse
   public string Username { get; set; }
   public string? UserProfilePicture { get; set; }
   public string? Bio { get; set; } = "";
-  public GetMyProfileCommandResponse(string username, string? userProfilePicture, string? bio)
+  public UserRole Role { get; set; } 
+  public GetMyProfileCommandResponse(string username, string? userProfilePicture, string? bio, UserRole role)
   {
     Username = username;
     UserProfilePicture = userProfilePicture;
     Bio = bio;
-
+    Role = role;
   }
 }

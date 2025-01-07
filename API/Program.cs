@@ -8,6 +8,13 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader() // Tüm başlıklara izin ver
               .AllowAnyMethod(); // Tüm HTTP metodlarına izin ver
     });
+    options.AddPolicy("AllowSignalR", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173") // Frontend URL'nizi buraya ekleyin
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials(); // Kimlik bilgilerine izin ver
+    });
 });
 
 builder.Services
@@ -18,6 +25,7 @@ builder.Services
 var jwtSettings = builder.Configuration.GetSection("JwtSettings") ?? throw new Exception("JwtSettings not found");
 var secretKey = jwtSettings["SecretKey"] ?? throw new Exception("SecretKey not found");
 
+builder.Services.AddSignalR();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,12 +66,10 @@ app.MapPost("/users",
     ([FromBody] CreateUserCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
 .WithName("CreateUser");
 
-
 app.MapGet("/my-profile",
     ([FromServices] IMediator mediator) => mediator.Send(new GetMyProfileCommand()))
 .WithName("GetMyProfile")
 .RequireAuthorization();
-
 
 app.MapGet("/profile/{username}",
    ([FromRoute] string username, [FromServices] IMediator mediator) => mediator.Send(new GetProfileCommand() { username = username }))
@@ -143,5 +149,18 @@ app.MapGet("/notifications",
     ([FromServices] IMediator mediator) => mediator.Send(new GetAllNotificationByUserIdCommand()))
 .WithName("GetAllNotificationByUserId")
 .RequireAuthorization();
+
+app.MapGet("/users",
+    [Authorize(Roles = "Admin")] ([FromServices] IMediator mediator) => mediator.Send(new GetAllUsersCommand()))
+.WithName("GetAllUsers")
+.RequireAuthorization();
+
+app.MapGet("/send-notification/{message}", async (IHubContext<NotificationHub> hubContext, [FromRoute] string message) =>
+{
+    await hubContext.Clients.All.SendAsync("ReceiveNotification", message);
+    return Results.Ok();
+});
+
+app.MapHub<NotificationHub>("/notificationHub").RequireCors("AllowSignalR");
 
 app.Run();

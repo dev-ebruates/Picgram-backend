@@ -24,7 +24,7 @@ public class UserRepository : IUserRepository
     .Include(x => x.ReceivedMessages)
     .FirstOrDefaultAsync(x => x.Id == id);
   }
-
+  
   public Task<User?> GetByEmailOrUsername(string emailOrUsername)
   {
     return context.Users.FirstOrDefaultAsync(x => x.Email == emailOrUsername || x.Username == emailOrUsername);
@@ -49,4 +49,9 @@ public class UserRepository : IUserRepository
   {
     return context.Users.Where(x => ids.Contains(x.Id)).ToListAsync();
   }
+
+    public Task<List<User>> GetAll()
+    {
+        return context.Users.ToListAsync();
+    }
 }
