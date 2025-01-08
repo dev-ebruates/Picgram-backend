@@ -19,7 +19,7 @@ public class GetAllUsersCommand : IRequest<Response<List<GetAllUsersCommandRespo
         if(users == null)
           return Response<List<GetAllUsersCommandResponse>>.CreateSuccessResponse(new List<GetAllUsersCommandResponse>(0), "No users found");
 
-          var userResponse = users.Select(u => new GetAllUsersCommandResponse(u.Id, u.Username, u.ProfilePicture, u.Role, u.CreatedAt)).ToList().OrderByDescending(x => x.CreatedAt)
+          var userResponse = users.Select(u => new GetAllUsersCommandResponse(u.Id, u.Username, u.ProfilePicture, u.Email, u.Role, u.CreatedAt)).ToList().OrderByDescending(x => x.CreatedAt)
           .ToList();
         return Response<List<GetAllUsersCommandResponse>>.CreateSuccessResponse(userResponse);
       }
@@ -37,15 +37,17 @@ public class GetAllUsersCommandResponse
   public Guid Id { get; set; }
   public string Username { get; set; }
   public string? UserProfilePicture { get; set; }
+  public string Email { get; set; }
   public UserRole Role { get; set; }
   public DateTime CreatedAt { get; set; }
 
 
-  public GetAllUsersCommandResponse(Guid id, string username, string? userProfilePicture, UserRole role, DateTime createdAt)
+  public GetAllUsersCommandResponse(Guid id, string username, string? userProfilePicture,string email, UserRole role, DateTime createdAt)
   {
   Id = id;
   Username = username;
   UserProfilePicture = userProfilePicture;
+  Email = email;
   Role = role;
   CreatedAt = createdAt;
   }
