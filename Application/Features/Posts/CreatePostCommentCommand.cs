@@ -9,11 +9,14 @@ public class CreatePostCommentCommand : IRequest<Response<PostCommentCommandResp
   {
     public readonly UnitOfWork unitOfWork;
     public readonly IHttpContextAccessor httpContextAccessor;
+    public readonly SignalRUserService signalRUserService;
 
-    public CreatePostCommentCommandHandler(UnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+
+    public CreatePostCommentCommandHandler(UnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, SignalRUserService signalRUserService)
     {
       this.unitOfWork = unitOfWork;
       this.httpContextAccessor = httpContextAccessor;
+      this.signalRUserService = signalRUserService;
     }
 
     public async Task<Response<PostCommentCommandResponse>> Handle(CreatePostCommentCommand request, CancellationToken cancellationToken)
@@ -36,6 +39,7 @@ public class CreatePostCommentCommand : IRequest<Response<PostCommentCommandResp
         var notification = Notification.CommentNotification(user.Id, post.UserId, post.Id);
         unitOfWork.NotificationRepository.Add(notification);
         await unitOfWork.SaveChanges(cancellationToken);
+        signalRUserService.SendNotification(post.User.Username, "CommentPost");
         return Response<PostCommentCommandResponse>.CreateSuccessResponse(new PostCommentCommandResponse(
           postComment.Id,
           post.Id,

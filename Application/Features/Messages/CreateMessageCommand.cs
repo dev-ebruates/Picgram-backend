@@ -10,20 +10,29 @@ public class CreateMessageCommand : IRequest<Response<CreateMessageCommandRespon
   {
     private readonly UnitOfWork unitOfWork;
     private readonly HttpUserService httpUserService;
+    private readonly SignalRUserService signalRUserService;
 
-    public CreateMessageCommandHandler(UnitOfWork unitOfWork, HttpUserService httpUserService)
+    public CreateMessageCommandHandler(UnitOfWork unitOfWork, HttpUserService httpUserService, SignalRUserService signalRUserService)
     {
       this.unitOfWork = unitOfWork;
       this.httpUserService = httpUserService;
+      this.signalRUserService = signalRUserService;
     }
 
     public async Task<Response<CreateMessageCommandResponse>> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
     {
       var senderUserId = httpUserService.GetUserId();
       var receiverUserId = request.ReceiverUserId;
+      var receiverUser = await unitOfWork.UserRepository.Get(receiverUserId) ?? throw new Exception("User not found");
+      var senderUser = await unitOfWork.UserRepository.Get(senderUserId) ?? throw new Exception("User not found");
+
       var message = Message.Create(senderUserId, receiverUserId, request.Content);
       unitOfWork.MessageRepository.Add(message);
       await unitOfWork.SaveChanges(cancellationToken);
+      
+      signalRUserService.SendNotification(receiverUser.Username, "CreateMessage");
+      signalRUserService.SendNotification(senderUser.Username, "CreateMessage");
+
       return Response<CreateMessageCommandResponse>.CreateSuccessResponse(
         new CreateMessageCommandResponse(
           receiverUserId,
