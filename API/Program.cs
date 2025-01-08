@@ -169,6 +169,12 @@ app.MapGet("/users",
 .WithName("GetAllUsers")
 .RequireAuthorization();
 
+app.MapPut("/users/{id}/delete", 
+    ([FromRoute] string id, [FromServices] IMediator mediator) => 
+        mediator.Send(new DeleteUserCommand { UserId = Guid.Parse(id) }))
+.WithName("DeleteUser")
+.RequireAuthorization();
+
 app.MapGet("/send-notification/{message}", async (IHubContext<NotificationHub> hubContext, [FromRoute] string message) =>
 {
     await hubContext.Clients.All.SendAsync("ReceiveNotification", message);

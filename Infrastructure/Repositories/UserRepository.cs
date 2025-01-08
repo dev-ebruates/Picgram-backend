@@ -24,7 +24,7 @@ public class UserRepository : IUserRepository
     .Include(x => x.ReceivedMessages)
     .FirstOrDefaultAsync(x => x.Id == id);
   }
-  
+
   public Task<User?> GetByEmailOrUsername(string emailOrUsername)
   {
     return context.Users.FirstOrDefaultAsync(x => x.Email == emailOrUsername || x.Username == emailOrUsername);
@@ -50,8 +50,22 @@ public class UserRepository : IUserRepository
     return context.Users.Where(x => ids.Contains(x.Id)).ToListAsync();
   }
 
-    public Task<List<User>> GetAll()
+  public Task<List<User>> GetAll()
+  {
+    return context.Users
+     .Where(x => !x.IsDeleted) // isDeleted == false olanları al
+     .ToListAsync();
+  }
+
+  public async Task SoftDelete(Guid id)
+  {
+    var user = await context.Users.FindAsync(id);
+    if (user == null)
     {
-        return context.Users.ToListAsync();
+      throw new KeyNotFoundException($"User with ID {id} not found.");
     }
+    user.Delete();
+    
+    
+  }
 }
