@@ -65,6 +65,11 @@ public class User : BaseEntity
 
         return this;
     }
+    public User UpdateProfilePicture(string? profilePicture)
+    {
+        ProfilePicture = profilePicture;
+        return this;
+    }
 }
 
 public enum UserRole

@@ -114,6 +114,11 @@ app.MapPost("/user-bio",
 .WithName("UpdateUserBio")
 .RequireAuthorization();
 
+app.MapPost("/user-profilePicture",
+    ([FromBody] UpdateUserProfilePictureCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
+.WithName("UpdateUserProfilePicture")
+.RequireAuthorization();
+
 app.MapPost("/stories",
     ([FromBody] CreateStoryCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
 .WithName("CreateStory")

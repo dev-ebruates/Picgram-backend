@@ -25,20 +25,23 @@ public class AuthCommand : IRequest<Response<AuthCommandResponse>>
       if (user.Password != request.Password)
         return Response<AuthCommandResponse>.CreateErrorResponse("Invalid password");
       var token = jwtTokenService.GenerateToken(user);
-      return Response<AuthCommandResponse>.CreateSuccessResponse(new AuthCommandResponse(token, user.Username), "User authenticated successfully");
+      return Response<AuthCommandResponse>.CreateSuccessResponse(new AuthCommandResponse(token, user.Username, user.Role), "User authenticated successfully");
     }
   }
 }
 
 public class AuthCommandResponse
 {
-  public AuthCommandResponse(string token, string userName)
+  public AuthCommandResponse(string token, string userName,  UserRole role)
   {
     Token = token;
     Username = userName;
+    Role = role;
+
   }
 
   public string Token { get; set; }
   public string Username { get; set; }
+  public UserRole Role { get; set; }
 
 }
