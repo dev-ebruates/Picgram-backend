@@ -174,8 +174,8 @@ app.MapGet("/users",
 .WithName("GetAllUsers")
 .RequireAuthorization();
 
-app.MapPut("/users/{id}/delete", 
-    ([FromRoute] string id, [FromServices] IMediator mediator) => 
+app.MapPut("/users/{id}/delete",
+    ([FromRoute] string id, [FromServices] IMediator mediator) =>
         mediator.Send(new DeleteUserCommand { UserId = Guid.Parse(id) }))
 .WithName("DeleteUser")
 .RequireAuthorization();
@@ -183,6 +183,12 @@ app.MapPut("/users/{id}/delete",
 app.MapGet("/getAllComments",
     [Authorize(Roles = "Admin")] ([FromServices] IMediator mediator) => mediator.Send(new GetAllCommentsCommand()))
 .WithName("GetAllComments")
+.RequireAuthorization();
+
+app.MapPut("/posts/{postId:guid}/comments/{commentId:guid}",
+    ([FromRoute] Guid postId, [FromRoute] Guid commentId, [FromServices] IMediator mediator) =>
+        mediator.Send(new DeleteCommentCommand { PostId = postId, CommentId = commentId }))
+.WithName("DeleteComment")
 .RequireAuthorization();
 
 app.MapGet("/send-notification/{message}", async (IHubContext<NotificationHub> hubContext, [FromRoute] string message) =>
