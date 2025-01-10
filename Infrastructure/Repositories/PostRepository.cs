@@ -1,4 +1,5 @@
-﻿namespace Infrastructure.Repositories;
+﻿
+namespace Infrastructure.Repositories;
 
 public class PostRepository : IPostRepository
 {

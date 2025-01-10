@@ -180,6 +180,11 @@ app.MapPut("/users/{id}/delete",
 .WithName("DeleteUser")
 .RequireAuthorization();
 
+app.MapGet("/getAllComments",
+    [Authorize(Roles = "Admin")] ([FromServices] IMediator mediator) => mediator.Send(new GetAllCommentsCommand()))
+.WithName("GetAllComments")
+.RequireAuthorization();
+
 app.MapGet("/send-notification/{message}", async (IHubContext<NotificationHub> hubContext, [FromRoute] string message) =>
 {
     await hubContext.Clients.All.SendAsync("ReceiveNotification", message);
