@@ -7,4 +7,5 @@ public interface IPostRepository
   public Task<List<Post>> GetAllByUserId(Guid userId);
   public Task<Post?> Get(Guid id);
   public Task<List<Post>> GetAllByUsername(string username);
+  public Task<PostComment> GetPostCommentByPostId(Guid postId, Guid commentId);
 }

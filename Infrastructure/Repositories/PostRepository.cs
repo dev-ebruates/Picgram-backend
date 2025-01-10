@@ -1,4 +1,6 @@
 ﻿
+using System.Diagnostics.Contracts;
+
 namespace Infrastructure.Repositories;
 
 public class PostRepository : IPostRepository
@@ -16,18 +18,18 @@ public class PostRepository : IPostRepository
     return post;
   }
 
-    public Task<Post?> Get(Guid id)
-    {
-      return context.Posts
-      .Include(x => x.Likes)
-      .Include(x => x.User)
-      .Include(x => x.Comments)
-      .ThenInclude(x => x.User)
-      .Where(post => post.Id == id)
-      .FirstOrDefaultAsync();
-    }
+  public Task<Post?> Get(Guid id)
+  {
+    return context.Posts
+    .Include(x => x.Likes)
+    .Include(x => x.User)
+    .Include(x => x.Comments)
+    .ThenInclude(x => x.User)
+    .Where(post => post.Id == id)
+    .FirstOrDefaultAsync();
+  }
 
-    public Task<List<Post>> GetAll()
+  public Task<List<Post>> GetAll()
   {
     return context.Posts
     .Include(x => x.User)
@@ -37,12 +39,17 @@ public class PostRepository : IPostRepository
     .ToListAsync();
   }
 
-    public Task<List<Post>> GetAllByUserId(Guid userId)
-    {
-        return context.Posts.Include(x => x.User).Where(x => x.UserId == userId).ToListAsync();
-    }
-    public Task<List<Post>> GetAllByUsername(string username){
-        return context.Posts.Include(x => x.User).Where(x => x.User.Username == username).ToListAsync();
-    }
+  public Task<List<Post>> GetAllByUserId(Guid userId)
+  {
+    return context.Posts.Include(x => x.User).Where(x => x.UserId == userId).ToListAsync();
+  }
+  public Task<List<Post>> GetAllByUsername(string username)
+  {
+    return context.Posts.Include(x => x.User).Where(x => x.User.Username == username).ToListAsync();
+  }
+  
+  public Task<PostComment> GetPostCommentByPostId(Guid postId, Guid commentId){
+    return context.Posts.Include(x => x.Comments).Where(x => x.Id == postId).SelectMany(x => x.Comments).Where(x=>x.Id == commentId).FirstOrDefaultAsync();
 
+  }
 }
