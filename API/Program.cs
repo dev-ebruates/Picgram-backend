@@ -191,6 +191,12 @@ app.MapPut("/posts/{postId:guid}/comments/{commentId:guid}",
 .WithName("DeleteComment")
 .RequireAuthorization();
 
+app.MapPut("/posts/{id}/delete",
+    ([FromRoute] string id, [FromServices] IMediator mediator) =>
+        mediator.Send(new DeletePostCommand { PostId = Guid.Parse(id) }))
+.WithName("DeletePost")
+.RequireAuthorization();
+
 app.MapGet("/send-notification/{message}", async (IHubContext<NotificationHub> hubContext, [FromRoute] string message) =>
 {
     await hubContext.Clients.All.SendAsync("ReceiveNotification", message);
