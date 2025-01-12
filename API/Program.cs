@@ -94,6 +94,10 @@ app.MapPost("/auth",
     ([FromBody] AuthCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
 .WithName("Auth");
 
+app.MapPost("/auth/google",
+    ([FromBody] GoogleAuthCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
+.WithName("GoogleAuth");
+
 app.MapPost("/posts",
     ([FromBody] CreatePostCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
 .WithName("CreatePost")

@@ -19,3 +19,5 @@ global using Domain.Extensions;
 global using Microsoft.AspNetCore.SignalR;
 global using API.Hubs;
 global using Microsoft.AspNetCore.Authorization;
+global using System.Security.Cryptography;
+global using Newtonsoft.Json;
