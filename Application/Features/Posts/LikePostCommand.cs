@@ -34,7 +34,7 @@ public class LikePostCommand : IRequest<Response<LikePostCommandResponse>>
         await unitOfWork.NotificationRepository.DeleteLikeNotification(userId, post.UserId, post.Id);
       }
       await unitOfWork.SaveChanges(cancellationToken);
-      signalRUserService.SendNotification(post.User.Username, "LikePost");
+      await signalRUserService.SendNotification(post.User.Username, "LikePost");
       return Response<LikePostCommandResponse>.CreateSuccessResponse(new LikePostCommandResponse(post.Id, post.LikeCount), "Post liked successfully");
     }
   }

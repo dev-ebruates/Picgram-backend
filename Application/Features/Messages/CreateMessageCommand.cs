@@ -30,8 +30,8 @@ public class CreateMessageCommand : IRequest<Response<CreateMessageCommandRespon
       unitOfWork.MessageRepository.Add(message);
       await unitOfWork.SaveChanges(cancellationToken);
       
-      signalRUserService.SendNotification(receiverUser.Username, "CreateMessage");
-      signalRUserService.SendNotification(senderUser.Username, "CreateMessage");
+      await signalRUserService.SendNotification(receiverUser.Username, "CreateMessage");
+      await signalRUserService.SendNotification(senderUser.Username, "CreateMessage");
 
       return Response<CreateMessageCommandResponse>.CreateSuccessResponse(
         new CreateMessageCommandResponse(

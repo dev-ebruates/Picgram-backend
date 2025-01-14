@@ -39,8 +39,8 @@ public class CreatePostCommentCommand : IRequest<Response<PostCommentCommandResp
         var notification = Notification.CommentNotification(user.Id, post.UserId, post.Id);
         unitOfWork.NotificationRepository.Add(notification);
         await unitOfWork.SaveChanges(cancellationToken);
-        signalRUserService.SendNotification(post.User.Username, "CommentPost");
-        signalRUserService.SendNotification(user.Username, "CommentPost");
+        await signalRUserService.SendNotification(post.User.Username, "CommentPost");
+        await signalRUserService.SendNotification(user.Username, "CommentPost");
         return Response<PostCommentCommandResponse>.CreateSuccessResponse(new PostCommentCommandResponse(
           postComment.Id,
           post.Id,

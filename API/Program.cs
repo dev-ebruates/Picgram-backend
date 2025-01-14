@@ -10,7 +10,7 @@ builder.Services.AddCors(options =>
     });
     options.AddPolicy("AllowSignalR", builder =>
     {
-        builder.WithOrigins("http://localhost:5173") // Frontend URL'nizi buraya ekleyin
+        builder.WithOrigins("https://picgram-dusky.vercel.app") // Frontend URL'nizi buraya ekleyin
                .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials(); // Kimlik bilgilerine izin ver
