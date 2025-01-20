@@ -76,9 +76,14 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/test",
+    () => "I'm ready!")
+.WithName("Test");
+
 app.MapPost("/users",
     ([FromBody] CreateUserCommand request, [FromServices] IMediator mediator) => mediator.Send(request))
-.WithName("CreateUser");
+.WithName("CreateUser")
+.RequireAuthorization();
 
 app.MapGet("/my-profile",
     ([FromServices] IMediator mediator) => mediator.Send(new GetMyProfileCommand()))
