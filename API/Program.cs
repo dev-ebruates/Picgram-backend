@@ -1,5 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
+var frontendUrl = builder.Configuration["FrontendUrl"];
+ArgumentNullException.ThrowIfNullOrWhiteSpace(frontendUrl, "FrontendUrl not found");
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -10,7 +13,7 @@ builder.Services.AddCors(options =>
     });
     options.AddPolicy("AllowSignalR", builder =>
     {
-        builder.WithOrigins("https://picgram-dusky.vercel.app") // Frontend URL'nizi buraya ekleyin
+        builder.WithOrigins(frontendUrl) // Frontend URL'nizi buraya ekleyin
                .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials(); // Kimlik bilgilerine izin ver
@@ -184,7 +187,7 @@ app.MapGet("/users",
 .RequireAuthorization();
 
 app.MapPut("/users/{id}/delete",
-    ([FromRoute] string id, [FromServices] IMediator mediator) =>
+   [Authorize(Roles = "Admin")] ([FromRoute] string id, [FromServices] IMediator mediator) =>
         mediator.Send(new DeleteUserCommand { UserId = Guid.Parse(id) }))
 .WithName("DeleteUser")
 .RequireAuthorization();
@@ -195,7 +198,7 @@ app.MapGet("/getAllComments",
 .RequireAuthorization();
 
 app.MapPut("/posts/{postId:guid}/comments/{commentId:guid}",
-    ([FromRoute] Guid postId, [FromRoute] Guid commentId, [FromServices] IMediator mediator) =>
+ ([FromRoute] Guid postId, [FromRoute] Guid commentId, [FromServices] IMediator mediator) =>
         mediator.Send(new DeleteCommentCommand { PostId = postId, CommentId = commentId }))
 .WithName("DeleteComment")
 .RequireAuthorization();
@@ -204,6 +207,11 @@ app.MapPut("/posts/{id}/delete",
     ([FromRoute] string id, [FromServices] IMediator mediator) =>
         mediator.Send(new DeletePostCommand { PostId = Guid.Parse(id) }))
 .WithName("DeletePost")
+.RequireAuthorization();
+
+app.MapGet("/getAllReports",
+    [Authorize(Roles = "Admin")] ([FromServices] IMediator mediator) => mediator.Send(new GetAllApplicationReportCommand()))
+.WithName("GetAllReports")
 .RequireAuthorization();
 
 app.MapGet("/send-notification/{message}", async (IHubContext<NotificationHub> hubContext, [FromRoute] string message) =>

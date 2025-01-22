@@ -1,6 +1,4 @@
-﻿
-
-namespace Infrastructure.Repositories;
+﻿namespace Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {
@@ -65,7 +63,13 @@ public class UserRepository : IUserRepository
       throw new KeyNotFoundException($"User with ID {id} not found.");
     }
     user.Delete();
-    
-    
+  }
+
+  public Task<List<DateTime>> GetCreatedAtList()
+  {
+    return context
+      .Users
+      .Select(x => x.CreatedAt)
+      .ToListAsync();
   }
 }

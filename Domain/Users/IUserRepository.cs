@@ -10,4 +10,5 @@ public interface IUserRepository
   public Task<List<(Guid Id, string Username, string? ProfilePicture)>> GetAllSearch(string searchParameter);
   public Task<List<User>> GetAllByIds(List<Guid> ids, CancellationToken cancellationToken);
   public Task SoftDelete(Guid id);
+  public Task<List<DateTime>> GetCreatedAtList();
 }

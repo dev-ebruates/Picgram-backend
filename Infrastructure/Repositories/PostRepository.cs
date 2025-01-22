@@ -47,9 +47,18 @@ public class PostRepository : IPostRepository
   {
     return context.Posts.Include(x => x.User).Where(x => x.User.Username == username).ToListAsync();
   }
-  
-  public Task<PostComment> GetPostCommentByPostId(Guid postId, Guid commentId){
-    return context.Posts.Include(x => x.Comments).Where(x => x.Id == postId).SelectMany(x => x.Comments).Where(x=>x.Id == commentId).FirstOrDefaultAsync();
+
+  public Task<List<DateTime>> GetCreatedAtList()
+  {
+    return context
+      .Posts
+      .Select(x => x.CreatedAt)
+      .ToListAsync();
+  }
+
+  public Task<PostComment> GetPostCommentByPostId(Guid postId, Guid commentId)
+  {
+    return context.Posts.Include(x => x.Comments).Where(x => x.Id == postId).SelectMany(x => x.Comments).Where(x => x.Id == commentId).FirstOrDefaultAsync();
 
   }
 }

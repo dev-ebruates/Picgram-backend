@@ -8,4 +8,5 @@ public interface IPostRepository
   public Task<Post?> Get(Guid id);
   public Task<List<Post>> GetAllByUsername(string username);
   public Task<PostComment> GetPostCommentByPostId(Guid postId, Guid commentId);
+  public Task<List<DateTime>> GetCreatedAtList();
 }

@@ -19,3 +19,5 @@ global using Microsoft.AspNetCore.Authorization;
 global using API.Hubs;
 global using Microsoft.AspNetCore.SignalR;
 global using Application.Services;
+global using Application.Features.Reports;
+global using Domain.Users;
