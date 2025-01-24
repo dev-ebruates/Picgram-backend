@@ -5,6 +5,8 @@ namespace Domain.Users;
 
 public class User : BaseEntity
 {
+    public const string PROFILE_PICTURE = "https://w7.pngwing.com/pngs/529/816/png-transparent-computer-icons-user-profile-avatar-heroes-monochrome-black-thumbnail.png";
+
     public string Username { get; private set; }
     public string Email { get; private set; }
     public string Password { get; private set; }
@@ -49,7 +51,7 @@ public class User : BaseEntity
             throw new ArgumentNullException(nameof(password));
         }
 
-        return new User(username, email, password, string.Empty, string.Empty, UserRole.User);
+        return new User(username, email, password, PROFILE_PICTURE, string.Empty, UserRole.User);
     }
 
     public User AddPost(Post post)
