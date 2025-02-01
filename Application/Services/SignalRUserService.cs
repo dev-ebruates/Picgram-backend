@@ -37,7 +37,7 @@ public class SignalRUserService
       userClients.Remove(userClient);
   }
 
-  public async Task SendNotification(string username, string methodName)
+  public async Task SendNotification(string username, string methodName, string? payload = null)
   {
     var userClient = userClients?.FirstOrDefault(x => x.Username == username);
     if (userClient != null)
@@ -46,7 +46,12 @@ public class SignalRUserService
       {
         var clientProxy = hubContext?.Clients?.Client(client);
         if (clientProxy != null)
-          await clientProxy.SendAsync("ReceiveNotification", methodName);
+        {
+          if (payload == null)
+            await clientProxy.SendAsync("ReceiveNotification", methodName);
+          else
+            await clientProxy.SendAsync("ReceiveNotification", methodName, payload);
+        }
       }
     }
   }
