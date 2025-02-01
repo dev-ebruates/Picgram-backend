@@ -217,7 +217,8 @@ app.MapPost("/picture/upload",
     (IFormFile file, [FromServices] IMediator mediator) =>
         mediator.Send(new SavePictureCommand(){ File = file}))
 .DisableAntiforgery()
-.WithName("PictureUpload");
+.WithName("PictureUpload")
+.RequireAuthorization();
 
 app.MapGet("/send-notification/{message}", async (IHubContext<NotificationHub> hubContext, [FromRoute] string message) =>
 {
