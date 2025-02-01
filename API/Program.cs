@@ -213,6 +213,12 @@ app.MapGet("/getAllReports",
 .WithName("GetAllReports")
 .RequireAuthorization();
 
+app.MapPost("/picture/upload",
+    (IFormFile file, [FromServices] IMediator mediator) =>
+        mediator.Send(new SavePictureCommand(){ File = file}))
+.DisableAntiforgery()
+.WithName("PictureUpload");
+
 app.MapGet("/send-notification/{message}", async (IHubContext<NotificationHub> hubContext, [FromRoute] string message) =>
 {
     await hubContext.Clients.All.SendAsync("ReceiveNotification", message);

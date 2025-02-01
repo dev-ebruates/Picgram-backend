@@ -21,3 +21,4 @@ global using Microsoft.AspNetCore.SignalR;
 global using Application.Services;
 global using Application.Features.Reports;
 global using Domain.Users;
+global using Application.Features.Pictures;
