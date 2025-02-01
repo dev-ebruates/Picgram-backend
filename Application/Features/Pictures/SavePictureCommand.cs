@@ -8,18 +8,25 @@ public class SavePictureCommand : IRequest<Response<SavePictureCommandResponse>>
   {
     public async Task<Response<SavePictureCommandResponse>> Handle(SavePictureCommand request, CancellationToken cancellationToken)
     {
-      if (request.File == null || request.File.Length == 0)
-        return Response<SavePictureCommandResponse>.CreateErrorResponse("File is null or empty");
-
-      var uploads = Path.Combine(Directory.GetCurrentDirectory(), "../picture");
-      var fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.File.FileName);
-      var filePath = Path.Combine(uploads, fileName);
-      using (var stream = new FileStream(filePath, FileMode.Create))
+      try
       {
-        await request.File.CopyToAsync(stream);
+        if (request.File == null || request.File.Length == 0)
+          return Response<SavePictureCommandResponse>.CreateErrorResponse("File is null or empty");
+
+        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "../picture");
+        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.File.FileName);
+        var filePath = Path.Combine(uploads, fileName);
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+          await request.File.CopyToAsync(stream);
+        }
+        var fileUrl = $"{fileName}";
+        return Response<SavePictureCommandResponse>.CreateSuccessResponse(new SavePictureCommandResponse(fileUrl));
       }
-      var fileUrl = $"{fileName}";
-      return Response<SavePictureCommandResponse>.CreateSuccessResponse(new SavePictureCommandResponse(fileUrl));
+      catch (Exception ex)
+      {
+        return Response<SavePictureCommandResponse>.CreateErrorResponse(ex.Message);
+      }
     }
   }
 }
