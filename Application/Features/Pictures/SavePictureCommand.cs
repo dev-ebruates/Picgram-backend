@@ -13,6 +13,11 @@ public class SavePictureCommand : IRequest<Response<SavePictureCommandResponse>>
         if (request.File == null || request.File.Length == 0)
           return Response<SavePictureCommandResponse>.CreateErrorResponse("File is null or empty");
 
+        var allowedExtensions = new[] { ".jpeg", ".jpg", ".png" };
+        var fileExtension = Path.GetExtension(request.File.FileName).ToLowerInvariant();
+        if (!allowedExtensions.Contains(fileExtension))
+          return Response<SavePictureCommandResponse>.CreateErrorResponse("Only JPEG, JPG and PNG files are allowed");
+
         var uploads = Path.Combine(Directory.GetCurrentDirectory(), "../picture");
         var fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.File.FileName);
         var filePath = Path.Combine(uploads, fileName);
