@@ -32,7 +32,7 @@ public class CreateMessageCommand : IRequest<Response<CreateMessageCommandRespon
       
       await signalRUserService.SendNotification(receiverUser.Username, "CreateMessage");
       await signalRUserService.SendNotification(senderUser.Username, "CreateMessage");
-      await signalRUserService.SendNotification(receiverUser.Username, "NewMessage", receiverUser.Username);
+      await signalRUserService.SendNotification(receiverUser.Username, "NewMessage", senderUser.Username);
 
 
       return Response<CreateMessageCommandResponse>.CreateSuccessResponse(
