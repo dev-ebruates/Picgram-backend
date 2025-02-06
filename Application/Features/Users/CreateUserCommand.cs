@@ -32,8 +32,9 @@ public class CreateUserCommand : IRequest<Response<CreateUserCommandResponse>>
                 var response = new CreateUserCommandResponse(dbUser.Username);
                 return Response<CreateUserCommandResponse>.CreateSuccessResponse(response, "User created successfully");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return Response<CreateUserCommandResponse>.CreateErrorResponse("Is username or email already in use?");
             }
         }
