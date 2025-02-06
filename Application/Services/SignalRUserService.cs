@@ -55,6 +55,21 @@ public class SignalRUserService
       }
     }
   }
+
+  public async Task SendNotificationToAll(string methodName, string? payload = null)
+  {
+    var users = userClients.Select(x => x.Username).ToList();
+    foreach (var user in users)
+    {
+      try
+      {
+        await SendNotification(user, methodName, payload);
+      }
+      catch (Exception)
+      {
+      }
+    }
+  }
 }
 
 
